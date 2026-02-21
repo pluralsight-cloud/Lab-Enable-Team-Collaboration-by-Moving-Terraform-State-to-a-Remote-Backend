@@ -2,6 +2,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
+# Toggle variable used to force a state change for locking demo
+variable "tag_toggle" {
+  type    = string
+  default = "A"
+}
+
 # Latest AL2023 AMI from AWS public SSM parameter
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
@@ -40,6 +46,7 @@ resource "aws_instance" "demo" {
   vpc_security_group_ids = [data.aws_security_group.lab_ssh.id]
 
   tags = {
-    Name = "tf-demo-ec2"
+    Name   = "tf-demo-ec2"
+    Toggle = var.tag_toggle
   }
 }
